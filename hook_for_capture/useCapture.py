@@ -32,7 +32,6 @@ def capture_frames(video_link, save_dir, duration=30, fps=2):
     existing_files = [f for f in os.listdir(save_dir) if f.startswith("frame_") and f.endswith('.jpg')]
     frame_count = 0
     if existing_files:
-        # 기존 파일에서 숫자 추출하여 최대값 찾기
         existing_numbers = [int(f.split('_')[-1].split('.')[0]) for f in existing_files]
         frame_count = max(existing_numbers) + 1  # 다음 숫자부터 시작
 
@@ -54,18 +53,12 @@ def capture_frames(video_link, save_dir, duration=30, fps=2):
     cap.release()
 
 
-def delete_frames(save_dir, delay=300):
-    """
-    지정된 디렉토리의 모든 프레임을 지정된 시간 (초) 후 삭제합니다.
-
-    Args:
-        save_dir (str): 프레임 저장 디렉토리
-        delay (int): 삭제 지연 시간 (초)
-    """
-    print("캡처를 삭제합니다.")
-    time.sleep(delay)
+def delete_frames(save_dir):
 
     # 디렉토리 내 모든 파일 삭제
     for filename in os.listdir(save_dir):
-        os.remove(os.path.join(save_dir, filename))
+        try:
+            os.remove(os.path.join(save_dir, filename))
+        except Exception as e:
+            print(f"Error deleting file {filename}: {e}")
     print("모든 프레임이 삭제되었습니다.")

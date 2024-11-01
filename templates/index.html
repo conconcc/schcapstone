@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>화재 정보</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .title {
+            text-align: center;
+            font-size: 48px;
+            margin-top: 50px;
+        }
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        table {
+            table-layout: fixed;
+            width: 75%;
+        }
+
+        td {
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">화재 정보</div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>지역</th>
+                    <th>위치</th>
+                    <th>시간</th>
+                    <th>URL</th>
+                </tr>
+            </thead>
+            <tbody id="data-table">
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function fetchData() {
+            $.ajax({
+                url: "/data",
+                method: "GET",
+                success: function(data) {
+                    var tableBody = $("#data-table");
+                    tableBody.empty(); // 기존 데이터 삭제
+                    data.forEach(function(row) {
+                        var newRow = "<tr><td>" + row.region + "</td><td>" + row.location + "</td><td>" + row.time + "</td><td><a href='" + row.URL + "' target='_blank'>링크</a></td></tr>";
+
+                        tableBody.append(newRow);
+                    });
+                }
+            });
+        }
+        $(document).ready(function() {
+            fetchData(); // 초기 데이터 가져오기
+            setInterval(fetchData, 5000);
+        });
+    </script>
+</body>
+</html>
